@@ -32,10 +32,10 @@ function SWEP:PreDrawViewModel() return true end
 
 function SWEP:Initialize()
     if(self.SetHoldType) then
-		self:SetHoldType("pistol")
-	end
+        self:SetHoldType("pistol")
+    end
 
-	self:DrawShadow(false)
+    self:DrawShadow(false)
 
     self.ReloadDelay = CurTime()+1
     self.Dest = Vector(0,0,0)
@@ -47,9 +47,9 @@ if SERVER then
         self:SetNextPrimaryFire(CurTime()+2)
         self:SetNextSecondaryFire(CurTime()+2)
 
-		local ply = self:GetOwner()
+        local ply = self:GetOwner()
 
-		if(not IsValid(ply)) then return end
+        if(not IsValid(ply)) then return end
         if(self.Dest == Vector(0,0,0)) then return end
         if(IsValid(self.Door1)) then return end
 
@@ -102,7 +102,7 @@ if SERVER then
             self.Door2Portal:SetTransparency(50)
             self.Door2Portal:SetZFar(500)
         end)
-	end
+    end
 
     function SWEP:CloseDoor()
         if(not IsValid(self.Door1Portal)) then return end
@@ -131,7 +131,7 @@ if SERVER then
 
         local ply = self:GetOwner()
 
-		if(not IsValid(ply)) then return end
+        if(not IsValid(ply)) then return end
 
         local tr = ply:GetEyeTraceNoCursor()
         local hitpos = tr.HitPos
