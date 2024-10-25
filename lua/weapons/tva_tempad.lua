@@ -19,7 +19,6 @@ SWEP.Secondary.Automatic = false
 SWEP.Category = "TVA"
 
 -- absolute basics before i make a control menu and do a bunch of stuff i've never done before for waypoints and colors and stuff:
--- R - sets destination to 
 
 function SWEP:CanPrimaryAttack() return false end
 function SWEP:CanSecondaryAttack() return false end
@@ -37,14 +36,14 @@ function SWEP:Initialize()
 
     self:DrawShadow(false)
 
-    self.ReloadDelay = CurTime()+1
+    self.ReloadDelay = CurTime()
     self.Dest = Vector(0,0,0)
     self.Door2Ang = Angle(0,0,0)
 end
 
 if SERVER then
     function SWEP:PrimaryAttack()
-        self:SetNextPrimaryFire(CurTime()+2)
+        self:SetNextPrimaryFire(CurTime()+1)
         self:SetNextSecondaryFire(CurTime()+2)
 
         local ply = self:GetOwner()
@@ -61,25 +60,25 @@ if SERVER then
         self.Door1Ang = angp
 
         self.Door1 = ents.Create("tva_time_door")
-        self.Door1:SetPos(hitpos + Vector(0,0,self.Door1.MaxSize+10))
+        self.Door1:SetPos(hitpos + Vector(0,0,self.Door1.MaxSize*self.Door1.SizeMult+10))
         self.Door1:SetAngles(self.Door1Ang)
         self.Door1:Spawn()
 
         self.Door2 = ents.Create("tva_time_door")
-        self.Door2:SetPos(self.Dest + Vector(0,0,self.Door2.MaxSize+10))
+        self.Door2:SetPos(self.Dest + Vector(0,0,self.Door2.MaxSize*self.Door2.SizeMult+10))
         self.Door2:SetAngles(self.Door2Ang)
         self.Door2:Spawn()
 
         self.Door1.ConnectedDoor = self.Door2
-        self.Door2.ConnectedDoor = self.Door11
+        self.Door2.ConnectedDoor = self.Door1
 
         
         timer.Simple(0.4,function()
             self.Door1Portal = ents.Create("linked_portal_door")
             self.Door2Portal = ents.Create("linked_portal_door")
             
-            self.Door1Portal:SetWidth(self.Door1.MaxSize+10)
-            self.Door1Portal:SetHeight(self.Door1.MaxSize*2+18)
+            self.Door1Portal:SetWidth(self.Door1.MaxSize*self.Door1.SizeMult+8)
+            self.Door1Portal:SetHeight(self.Door1.MaxSize*self.Door1.SizeMult*2+18)
             self.Door1Portal:SetPos(self.Door1:GetPos() + self.Door1:GetForward() * -10)
             self.Door1Portal:SetAngles(self.Door1:GetAngles() + Angle(0,180,0))
             self.Door1Portal:SetExit(self.Door2Portal)
@@ -88,10 +87,10 @@ if SERVER then
             self.Door1Portal:Activate()
             self.Door1Portal:SetRenderMode(1)
             self.Door1Portal:SetTransparency(50)
-            self.Door1Portal:SetZFar(500)
-            
-            self.Door2Portal:SetWidth(self.Door2.MaxSize+10)
-            self.Door2Portal:SetHeight(self.Door2.MaxSize*2+18)
+            self.Door1Portal:SetZFar(1)
+
+            self.Door2Portal:SetWidth(self.Door2.MaxSize*self.Door2.SizeMult+8)
+            self.Door2Portal:SetHeight(self.Door2.MaxSize*self.Door2.SizeMult*2+18)
             self.Door2Portal:SetPos(self.Door2:GetPos() + self.Door2:GetForward() * -10)
             self.Door2Portal:SetAngles(self.Door2:GetAngles() + Angle(0,180,0))
             self.Door2Portal:SetExit(self.Door1Portal)
@@ -100,7 +99,8 @@ if SERVER then
             self.Door2Portal:Activate()
             self.Door2Portal:SetRenderMode(1)
             self.Door2Portal:SetTransparency(50)
-            self.Door2Portal:SetZFar(500)
+            self.Door2Portal:SetZFar(1)
+
         end)
     end
 
@@ -126,7 +126,7 @@ if SERVER then
         if(self.ReloadDelay >= CurTime()) then
             return
         else
-            self.ReloadDelay = CurTime()+1
+            self.ReloadDelay = CurTime()+0.5
         end
 
         local ply = self:GetOwner()

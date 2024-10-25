@@ -118,19 +118,26 @@ if CLIENT then
             end
         end)
 
+        local mat = Material("models/props_combine/com_shield001a")
+
         hook.Add("PreDrawOpaqueRenderables","TimeDoorRender"..self.Entity:EntIndex(),function()
             if(wp.drawing) then
                 render.Clear(255,115,0,1)
-                render.SetColorModulation(0.1,0.1,0.1)
+                render.ModelMaterialOverride(mat)
+            end
+        end)
+
+        hook.Add("PostDrawOpaqueRenderables","PostTimeDoorRender"..self.Entity:EntIndex(),function()
+            if(wp.drawing) then
+                render.ModelMaterialOverride(nil)
             end
         end)
         
-        hook.Add("wp-postrender", "stuff", function(portal)
+        hook.Add("wp-postrender", "TimeDoorWP"..self.Entity:EntIndex(),function(portal)
             local rt = render.GetRenderTarget()
-            render.BlurRenderTarget( portal:GetTexture(), 2, 2, 1 )
-            render.SetRenderTarget( rt )
+            render.BlurRenderTarget(portal:GetTexture(), 2, 2, 1)
+            render.SetRenderTarget(rt)
         end)
-
 
         self.Entity:SetModelScale(0.1,0)
 
@@ -147,8 +154,9 @@ if CLIENT then
 
     function ENT:OnRemove()
         hook.Remove("PreDrawHalos","TimeDoorHalo"..self.Entity:EntIndex())
-        hook.Remove("PreDrawSkyBox", "TimeDoorRender"..self.Entity:EntIndex())
-        hook.Remove("wp-postrender","stuff"..self.Entity:EntIndex())
+        hook.Remove("PreDrawOpaqueRenderables", "TimeDoorRender"..self.Entity:EntIndex())
+        hook.Remove("PostDrawOpaqueRenderables","PostTimeDoorRender"..self.Entity:EntIndex())
+        hook.Remove("wp-postrender","TimeDoorWP"..self.Entity:EntIndex())
     end
 else -- server
 
