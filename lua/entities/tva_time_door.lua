@@ -10,7 +10,7 @@ ENT.Purpose	= "Decoration"
 ENT.Instructions = "Just put it somewhere"
 
 ENT.Spawnable = true
-ENT.AdminSpawnable = true
+ENT.AdminOnly = true
 
 ENT.MaxSize = 50
 ENT.SizeMult = 1
